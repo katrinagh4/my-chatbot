@@ -7,8 +7,9 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "openai": "^3.0.0"
+  "axios": "^1.8.4",
+  "openai": "^4.89.0"
+}
   },
   "devDependencies": {},
   "engines": {
