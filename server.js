@@ -1,41 +1,27 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { OpenAI } = require('openai');
-
+const { OpenAI } = require('openai');  // исправленный импорт
 const app = express();
 const port = 3000;
 
-// Инициализация OpenAI с твоим API ключом
+// Инициализация OpenAI с использованием API ключа
 const openai = new OpenAI({
-  apiKey: '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',  // Замените на свой ключ
+  apiKey: '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',  // Замени на свой ключ
 });
 
-// Middleware для парсинга JSON данных
-app.use(bodyParser.json());
-
-// Роут для общения с GPT
+// Пример простого эндпоинта для общения с GPT-3
 app.post('/chat', async (req, res) => {
-  const userMessage = req.body.message;
-
-  if (!userMessage) {
-    return res.status(400).json({ error: 'No message provided' });
-  }
-
   try {
-    const response = await openai.completions.create({
-      model: 'text-davinci-003',  // Или другой GPT модель, например, gpt-3.5-turbo
-      prompt: userMessage,
-      max_tokens: 150,
+    const response = await openai.chat.completions.create({
+      model: 'gpt-4.0',  // Укажи нужную модель
+      messages: [{ role: 'user', content: req.body.message }],
     });
 
-    res.json({ response: response.choices[0].text.trim() });
+    res.json(response);
   } catch (error) {
-    console.error('Error interacting with OpenAI:', error);
-    res.status(500).json({ error: 'Something went wrong with OpenAI' });
+    res.status(500).send(error.message);
   }
 });
 
-// Запуск сервера
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
